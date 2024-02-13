@@ -127,13 +127,15 @@ namespace DailyCheck
             {
                 double arg = x;
                 double const1 = 50;
-                double const2 = 300;
+                double const2 = 200;
                 return (1 - Math.Cos(arg / const1)) * const2 / (const2 + arg);
             }
 
             var originalHeight = MainGrid.RowDefinitions[1].ActualHeight;
+            double topMargin = 23; // (ImageGrid.Height - MainGrid.RowDefinitions[1].Height.Value) / 2;
+
             MainGrid.RowDefinitions[1].Height = new GridLength(330);
-            ImageGrid.VerticalAlignment = VerticalAlignment.Top;
+            ImageGrid.VerticalAlignment = VerticalAlignment.Top;            
             int indexer = 0;
 
             while (!token.IsCancellationRequested)
@@ -141,7 +143,7 @@ namespace DailyCheck
                 try
                 {
                     indexer++;
-                    ImageGrid.Margin = new Thickness(0, 200 * fun(indexer), 0, 0);
+                    ImageGrid.Margin = new Thickness(0, topMargin + 160 * fun(indexer), 0, 0);
                     await Task.Delay(10, token);
                     Log(ImageGrid.Margin.ToString());
                 }
