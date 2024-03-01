@@ -10,10 +10,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="img\check_24.png" />
+    <None Remove="img\empty_box.png" />
+    <None Remove="img\empty_box_layer.png" />
+    <None Remove="img\empty_prize.png" />
+    <None Remove="img\error_24.png" />
+    <None Remove="img\error_red24.png" />
     <None Remove="img\icon_close.png" />
+    <None Remove="img\icon_loading.png" />
     <None Remove="img\icon_minimize.png" />
-    <None Remove="img\kv2.png" />
+    <None Remove="img\icon_openfile.png" />
+    <None Remove="img\icon_settings.png" />
+    <None Remove="img\icon_trash.png" />
+    <None Remove="img\icon_update.png" />
     <None Remove="img\kv2small.png" />
+    <None Remove="img\lolologo.ico" />
+    <None Remove="img\search_16.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,16 +34,52 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="img\check_24.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\empty_box.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\empty_box_layer.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\empty_prize.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\error_24.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\error_red24.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="img\icon_close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\icon_loading.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="img\icon_minimize.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="img\kv2.png">
+    <Resource Include="img\icon_openfile.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\icon_settings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\icon_trash.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\icon_update.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="img\kv2small.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\lolologo.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\search_16.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
