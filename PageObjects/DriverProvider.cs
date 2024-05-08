@@ -30,12 +30,18 @@ namespace DailyCheck.PageObjects
             ChromeDriverService driverService = ChromeDriverService.CreateDefaultService(DriverPath);
             driverService.HideCommandPromptWindow = true;
 
+            Log(ChromeBinaries);
+            Log(ChromeBinary);
+            Log(DriverPath);
+            Log(BrowserDataDir);
+
             try
             {
                 Driver = new ChromeDriver(driverService, options);
             }
             catch
             {
+                Log("Default Driver");
                 Driver = new ChromeDriver();
             }
         }

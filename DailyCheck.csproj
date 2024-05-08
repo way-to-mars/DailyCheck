@@ -7,7 +7,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Resources\lolologo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChromeBinaries\**" />
+    <EmbeddedResource Remove="ChromeBinaries\**" />
+    <None Remove="ChromeBinaries\**" />
+    <Page Remove="ChromeBinaries\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="img\check_24.png" />
@@ -38,6 +46,10 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\lolologo.ico" />
   </ItemGroup>
 
   <ItemGroup>

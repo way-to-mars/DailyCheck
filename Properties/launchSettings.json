@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DailyCheck": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Code\\CS\\DailyCheck\\bin\\Debug\\net8.0-windows\\BlackAlbum.bin\""
+    }
+  }
+}
