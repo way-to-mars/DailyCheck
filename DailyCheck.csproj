@@ -17,24 +17,6 @@
     <Page Remove="ChromeBinaries\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="img\check_24.png" />
-    <None Remove="img\empty_box.png" />
-    <None Remove="img\empty_box_layer.png" />
-    <None Remove="img\empty_prize.png" />
-    <None Remove="img\error_24.png" />
-    <None Remove="img\error_red24.png" />
-    <None Remove="img\icon_close.png" />
-    <None Remove="img\icon_loading.png" />
-    <None Remove="img\icon_minimize.png" />
-    <None Remove="img\icon_openfile.png" />
-    <None Remove="img\icon_settings.png" />
-    <None Remove="img\icon_trash.png" />
-    <None Remove="img\icon_update.png" />
-    <None Remove="img\kv2small.png" />
-    <None Remove="img\lolologo.ico" />
-    <None Remove="img\search_16.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">

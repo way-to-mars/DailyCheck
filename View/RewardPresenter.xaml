@@ -8,12 +8,12 @@
              Background="#00FFFFFF"
              mc:Ignorable="d">
     <Grid Height="220" Width="160">
-        <Image Panel.ZIndex="0" Source="D:\Code\CS\DailyCheck\img\empty_box_layer.png"/>
-        <Image Panel.ZIndex="1" x:Name="ImageBackground" d:Source="\img\empty_box.png"/>
+        <Image Panel.ZIndex="0" Source="pack://application:,,,/img/empty_box_layer.png"/>
+        <Image Panel.ZIndex="1" x:Name="ImageBackground" d:Source="pack://application:,,,/img/empty_box.png"/>
         <Grid  Panel.ZIndex="2" Width="100" Height="72"
                VerticalAlignment="Top" Margin="0,84,0,0">
             <Image Name="ImageContent" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   d:Source="\img\empty_prize.png"/>
+                   d:Source="pack://application:,,,/img/empty_prize.png"/>
         </Grid>
         <TextBlock  Name="ContentDescription"
                     Panel.ZIndex="3"

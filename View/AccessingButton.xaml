@@ -35,7 +35,7 @@
                    Foreground="White"/>
         <Grid Height="30" Grid.Column="0" VerticalAlignment="Top">
             <Image x:Name="RefreshImage"
-                   Source="D:\Code\CS\DailyCheck\img\icon_update.png"
+                   Source="pack://application:,,,/img/icon_update.png"
                    Width="24"
                    Height="24"
                    Visibility="Visible"

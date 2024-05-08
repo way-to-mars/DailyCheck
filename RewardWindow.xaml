@@ -92,7 +92,7 @@
                 <Button Width="30" Height="30" Margin="2" Click="Settings_Click">
                     <Button.Content>
                         <Grid>
-                            <Image Source="D:\Code\CS\DailyCheck\img\icon_settings.png"
+                            <Image Source="img/icon_settings.png"
                                Width="16" Height="16"/>
                             <TextBlock Text="!"
                                        x:Name="WrongSettings"

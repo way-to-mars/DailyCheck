@@ -31,7 +31,7 @@ namespace DailyCheck.View
             }
             else
             {
-                ImageBackground.Source = new BitmapImage(new Uri(@"D:\Code\CS\DailyCheck\img\empty_box.png", UriKind.Absolute));
+                ImageBackground.Source = new BitmapImage(new Uri(@"pack://application:,,,/img/empty_box.png", UriKind.Absolute));
             }
             return this;
         }
@@ -45,7 +45,7 @@ namespace DailyCheck.View
             }
             else
             {
-                ImageContent.Source = new BitmapImage(new Uri(@"D:\Code\CS\DailyCheck\img\empty_prize.png", UriKind.Absolute));
+                ImageContent.Source = new BitmapImage(new Uri(@"pack://application:,,,/img/empty_prize.png", UriKind.Absolute));
             }
             return this;
         }

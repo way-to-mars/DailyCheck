@@ -24,7 +24,7 @@
                    Foreground="White"/>
         <Grid Height="30" Grid.Column="0" VerticalAlignment="Top">
         <Image x:Name="ViewLoading"
-               Source="D:\Code\CS\DailyCheck\img\icon_loading.png"
+               Source="pack://application:,,,/img/icon_loading.png"
                Width="24"
                Height="24"
                Visibility="Collapsed"
@@ -47,7 +47,7 @@
             </Image.Triggers>
         </Image>
         <Image x:Name="ViewSuccess"
-               Source="D:\Code\CS\DailyCheck\img\check_24.png"
+               Source="pack://application:,,,/img/check_24.png"
                Width="24"
                Height="24"
                HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -78,13 +78,13 @@
         </Image>
         <Grid x:Name="ViewFailure">
                 <Image x:Name="ViewFailureRed"
-                   Source="D:\Code\CS\DailyCheck\img\error_red24.png"
+                   Source="pack://application:,,,/img/error_red24.png"
                    Width="24"
                    Height="24"
                    Opacity="1"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <Image x:Name="ViewFailureWhite"
-                   Source="D:\Code\CS\DailyCheck\img\error_24.png"
+                   Source="pack://application:,,,/img/error_24.png"
                    Width="24"
                    Height="24"
                    HorizontalAlignment="Center" VerticalAlignment="Center">

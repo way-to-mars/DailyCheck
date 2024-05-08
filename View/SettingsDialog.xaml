@@ -50,7 +50,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">                    
                     <Image Name="ButtonClose"
                        Width="24" Height="24"
-                       Source="D:\Code\CS\DailyCheck\img\icon_close.png"
+                       Source="pack://application:,,,/img/icon_close.png"
                        Margin="2,0,5,0"
                        Style="{StaticResource HeaderButton}" MouseLeftButtonDown="ButtonClose_MouseLeftButtonDown"/>
                 </StackPanel>
@@ -97,7 +97,7 @@
                             <Image
                                 Height="16"
                                 Width="16"
-                                Source="D:\Code\CS\DailyCheck\img\icon_openfile.png"
+                                Source="pack://application:,,,/img/icon_openfile.png"
                                 Stretch="Fill"/>
                         </Button.Content>
                     </Button>
@@ -108,7 +108,7 @@
                             <Image
                                 Height="16"
                                 Width="16"
-                                Source="D:\Code\CS\DailyCheck\img\icon_trash.png"
+                                Source="pack://application:,,,/img/icon_trash.png"
                                 Stretch="Fill"/>
                         </Button.Content>                        
                     </Button>
