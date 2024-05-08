@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="DailyCheck.View.ButtonLGC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DailyCheck.View"
+             mc:Ignorable="d"             
+             d:DesignHeight="30" d:DesignWidth="130">
+    <Button Padding="10,2" x:Name="MainButton" ToolTipService.ShowOnDisabled="True"
+            IsDefault="True">
+        <Button.Content >
+            <StackPanel Orientation="Horizontal">
+                <Grid Width="24" Height="24" Margin="2,0,2,0" Name="SearchIconHolder">
+                    <Image Name="SearchIcon"
+                           Source="D:\Code\CS\DailyCheck\img\search_16.png"
+                           Width="16" Height="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid Height="24" Margin="2,0,2,0">
+                    <TextBlock x:Name="ButtonText"
+                        TextWrapping="Wrap"
+                        d:Text="Preview"
+                        VerticalAlignment="Center"/>
+                </Grid>
+            </StackPanel>
+        </Button.Content>
+    </Button>
+</UserControl>

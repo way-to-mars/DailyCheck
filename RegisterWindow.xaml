@@ -1,4 +1,4 @@
-﻿<Window x:Class="DailyCheck.MainWindow"
+﻿<Window x:Class="DailyCheck.RegisterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
         Width="300"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Height="360">
+        Height="360" Closing="Window_Closing">
 
     <Window.Resources>
 
@@ -191,8 +191,15 @@
               VerticalAlignment="Center"
               >
             <Image Source="img/kv2small.png" Width="150" Height="104" VerticalAlignment="Center" x:Name="TankImage"/>
+            <TextBlock x:Name="NotificationHolder"
+                        Text=""
+                        Margin="0,0,0,-20"
+                        Padding = "10, 2, 10, 2"
+                        Foreground = "Wheat"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"/>
         </Grid>
-        <Grid Grid.Row="2" x:Name="LoginForm">
+        <Grid Grid.Row="2" x:Name="LoginForm" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
@@ -217,7 +224,48 @@
                        Text="Пароль"
                        Visibility="Visible"/>
         
-            <Button x:Name="SubmitButton" Grid.Row="2" Width="100" Height="30" Margin="0,0,0,8" FontWeight="DemiBold" FontSize="14" VerticalContentAlignment="Center" Click="ButtonSubmit">Войти</Button>
-        </Grid> 
+            <Button x:Name="SubmitButton" Grid.Row="2" Width="100" Height="30"
+                    Margin="0,0,0,8" FontWeight="DemiBold" FontSize="14"
+                    IsDefault="True"
+                    VerticalContentAlignment="Center" Click="ButtonSubmit">Войти</Button>
+        </Grid>
+        <Grid Grid.Row="2" x:Name="SaveForm" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" 
+                       Text="Имя игрока:"
+                       Foreground="White"
+                       FontSize="14"
+                       FontWeight="DemiBold"
+                       Margin="20,6"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            <Border Grid.Row="1"
+                    BorderThickness="1"
+                    BorderBrush="White"
+                    Background="#20FFFFFF"
+                    CornerRadius="5"
+                    Height="40"
+                    VerticalAlignment="Top"
+                    Margin="20,0">
+                <TextBox  x:Name="PlayerNameHolder"
+                          d:Text="Karapitek"
+                          IsReadOnly="True"
+                          Background="Transparent"
+                          Foreground="White"
+                          FontSize="14"
+                          BorderThickness="0"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+            </Border>
+            <Button Grid.Row="2"
+                    Width="130" Height="30"
+                    FontWeight="DemiBold" FontSize="14"
+                    VerticalContentAlignment="Center"
+                    Click="Button_CreateLink"
+                    Content="Создать ярлык"/>
+        </Grid>
     </Grid>
 </Window>

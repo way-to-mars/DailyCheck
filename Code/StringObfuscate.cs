@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DailyCheck
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
         private static readonly List<KeyValuePair<String, String>> ReplaceDict = [
             new KeyValuePair<string, string>("04", "G"),
@@ -37,25 +34,22 @@ namespace DailyCheck
             if (inputString.Length == 0 && !undo) return "%%";
             if (undo && inputString == "%%") return "";
 
-            int key;
             if (undo)
             {
                 string knownLengthString = inputString.UnRenameHex();
-                key = RandomSeed(knownLengthString.Length / 4, index);
+                int key = RandomSeed(knownLengthString.Length / 4, index);
                 return knownLengthString.DeShuffle(key).FromUTFCodeString();
             }
-
-            key = RandomSeed(inputString.Length, index);
-            return inputString.ToUTFCodeString().Shuffle(key).RenameHex();
+            else
+            {
+                int key = RandomSeed(inputString.Length, index);
+                return inputString.ToUTFCodeString().Shuffle(key).RenameHex();
+            }
         }
-
-
         public static bool IsValidEmailAddress(this string s)
         {
-            Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-            return regex.IsMatch(s);
+            return new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").IsMatch(s);
         }
-
         private static int[] GetShuffleExchanges(int size, int key)
         {
             int[] exchanges = new int[size - 1];
@@ -67,7 +61,6 @@ namespace DailyCheck
             }
             return exchanges;
         }
-
         private static string Shuffle(this string toShuffle, int key)
         {
             int size = toShuffle.Length;
@@ -80,7 +73,6 @@ namespace DailyCheck
             }
             return new string(chars);
         }
-
         private static string DeShuffle(this string shuffled, int key)
         {
             int size = shuffled.Length;
@@ -93,15 +85,13 @@ namespace DailyCheck
             }
             return new string(chars);
         }
-
         private static string ToUTFCodeString(this string str)
         {
             List<string> output = [];
-            for (var i = 0; i < str.Length; i++)
+            for (int i = 0; i < str.Length; i++)
                 output.Add(string.Format("{0:X4}", (ushort)str[i]));
             return string.Concat(output);
         }
-
         private static string FromUTFCodeString(this string str)
         {
             List<char> output = [];
@@ -109,14 +99,12 @@ namespace DailyCheck
                 output.Add((char)Convert.ToUInt16(str.Substring(i, 4), 16));
             return string.Concat(output);
         }
-
         private static string RenameHex(this string hexString)
         {
             StringBuilder sb = new(hexString);
             foreach (var pair in ReplaceDict) sb.Replace(pair.Key, pair.Value);
             return sb.ToString();
         }
-
         private static string UnRenameHex(this string hexString)
         {
             StringBuilder sb = new(hexString);
