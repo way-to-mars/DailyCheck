@@ -35,7 +35,8 @@ namespace DailyCheck
                 else
                 {
                     MessageBox.Show($"Не удалось прочитать файл:\n{argFile}");
-                    Shutdown(exitCode: 1);
+                    //Shutdown(exitCode: 1);
+                    MainWindow = new RegisterWindow();
                 }
             }
             else
@@ -44,7 +45,7 @@ namespace DailyCheck
                 MainWindow = new RegisterWindow();
             }
 
-            MainWindow.Show();
+            MainWindow?.Show();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

@@ -30,15 +30,6 @@ namespace DailyCheck.PageObjects
             Old,
         }
 
-        private readonly List<string> CheckList = [
-                        "https://ya.ru",
-                        "https://mail.ru",
-                        "https://rambler.ru",
-                        "https://gismeteo.ru",
-                        "https://habr.ru",
-                        "https://google.com",
-                        ];
-
         private readonly Dictionary<string, string> _attributes = new()
         {
             {"PlayerName", ""},
@@ -71,12 +62,7 @@ namespace DailyCheck.PageObjects
             }
             catch
             {
-                var tasks = CheckList.Select(CheckUrl);
-                Task.WhenAll(tasks).Wait();
-                int sitesChecked = CheckList.Count;
-                int sitesAble = tasks.Where(x => x.Result).Count();
-
-                if (sitesAble == 0)
+                if (SitesAble().Item1 == 0)
                 {
                     _attributes["Error"] = "Нет доступа к интернету";
                     return false;
@@ -84,9 +70,9 @@ namespace DailyCheck.PageObjects
 
                 var accessDomen = CheckUrl(tankiDomen);
                 var accessStartUrl = CheckUrl(startUrl);
-                if (!accessDomen.Result)
+                if (!accessDomen.Result.IsSuccessHttpResponse())
                     _attributes["Error"] = "Сайт tanki.su не доступен";
-                else if (!accessStartUrl.Result)
+                else if (!accessStartUrl.Result.IsSuccessHttpResponse())
                     _attributes["Error"] = "Сайт tanki.su доступен, но недоступна страница авторизации";
                 else
                     _attributes["Error"] = "Интернет перегружен или нестабилен";
@@ -162,12 +148,7 @@ namespace DailyCheck.PageObjects
                 ConsolePanelLastFailure();
                 ConsolePanelAdd("Проверка подключения к интернету...", "", "", AccessingElement.StateEnum.Loading);
 
-                var tasks = CheckList.Select(CheckUrl);
-
-                Task.WhenAll(tasks).Wait();
-
-                int sitesChecked = CheckList.Count;
-                int sitesAble = tasks.Where(x => x.Result).Count();
+                var (sitesAble, sitesChecked) = SitesAble();
 
                 if (sitesAble == 0)
                 {
@@ -184,13 +165,13 @@ namespace DailyCheck.PageObjects
                 var accessDomen = CheckUrl(tankiDomen);
                 var accessStartUrl = CheckUrl(startUrl);
 
-                if (!accessDomen.Result)
+                if (!accessDomen.Result.IsSuccessHttpResponse())
                 {
                     ConsolePanelLastFailure("Сайт tanki.su не доступен");
                     return false;
                 }
 
-                if (!accessStartUrl.Result)
+                if (!accessStartUrl.Result.IsSuccessHttpResponse())
                 {
                     ConsolePanelLastFailure("Сайт tanki.su доступен, но недоступна страница авторизации");
                     return false;
@@ -370,18 +351,6 @@ namespace DailyCheck.PageObjects
                 null
                 );
         }
-        private static async Task<bool> CheckUrl(string url)
-        {
-            HttpClient client = new() { Timeout = TimeSpan.FromSeconds(20) };
-            try
-            {
-                var checkingResponse = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                Log($"GetAsync is finished for {url} with {checkingResponse.IsSuccessStatusCode}");
-                if (checkingResponse.IsSuccessStatusCode)
-                    return true;
-            }
-            catch { Log($"GetAsync has failed on {url}"); }
-            return false;
-        }
+
     }
 }

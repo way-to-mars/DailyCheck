@@ -1,6 +1,7 @@
 ﻿using DailyCheck.View;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System.Net;
 using System.Net.Http;
 using System.Windows;
 using static DailyCheck.DebugLogger;
@@ -9,49 +10,79 @@ namespace DailyCheck.PageObjects
 {
     public class WebEventMay2024PageObject(IWebDriver driver, SynchronizationContext? uiContext, AccessingElement uiElement) : BasePageObject(driver)
     {
-        private static readonly By loginInput = By.Id("id_login");
-        private static readonly By passwordInput = By.Id("id_password");
-        private static readonly By submitButton = By.XPath("//button[@type='submit']");
-        //  private static readonly By submitButton = By.XPath("//span[@class='jsc-submit-button']");
-        private static readonly By authenticationError = By.XPath("//p[@class='js-form-errors-content']");
-        private static readonly By playerNameText = By.ClassName("cm-user-menu-link_cutted-text");
-        private static readonly By todayItem = By.XPath("//div[@class='c_item c_default']");
-        private static readonly By completedItems = By.XPath("//div[@class='c_item c_comlete']");
-        private static readonly By itemBackground = By.XPath("./div[@class='c_item__bg']/img");
-        private static readonly By itemContent = By.XPath(".//img[@class='c_item__icon']");
-        private static readonly By itemTextSpan = By.XPath(".//span[@class='c_item__text']");
+
         private static readonly string eventURL = @"https://tanki.su/ru/web-event-may2024/";
         private readonly SynchronizationContext? UiContext = uiContext;
         private readonly AccessingElement uiElement = uiElement;
 
         private static readonly By taskNotAcceptedButton = By.XPath("//button[@class='Button_button__G7972 Button_button_disable__EblZF']");
         private static readonly By taskAcceptedButton = By.XPath("//button[@class='Button_button__G7972 Button_button_claimed__hjXRG']");
+        private static readonly By taskCompletedButton = By.XPath("//button[@class='Button_button__G7972 Button_button_completed__eJppi']");
+        private static readonly By taskTakeNewButton = By.XPath("//button[@class='Button_button__G7972 ']");
 
-        public async Task Start(int delayInSeconds)
+        public async Task RunUpdater(int delayInSeconds)
         {
-            int _delay = delayInSeconds * 1000;
-            Log("Start WebEvent");
+            int delayMilliseconds = delayInSeconds * 1000;
+            Log("RunUpdater WebEvent");
             while (true)
             {
                 NotifyUI("Проверка", "", "", AccessingElement.StateEnum.Loading);
-                if (CheckUrl(eventURL).Result) break;
+
+                int responce = CheckUrl(eventURL).Result;       // 0 - exception (no internet or god knows what else)
+                if (responce >= 200 && responce <= 299) break;  // Ok
+                if (responce == 404) {                          // Page not found
+                    NotifyUI("", "", "завершено", AccessingElement.StateEnum.Failure);
+                    SetHint("Страница события не существует. Вероятно ивент уже завершился.");
+                    return;
+                }
+                
                 Log("Страница события недоступна");                
                 NotifyUI("", "", "ошибка", AccessingElement.StateEnum.Failure);
-                await Task.Delay(_delay);
+                SetHint($"Страница события недоступна. Код ошибки: {responce}");
+                await Task.Delay(delayMilliseconds);
             }
+            RemoveHint();
             Driver.Navigate().GoToUrl(eventURL);
             Log("Открываем страницу события");
             NotifyUI("Загрузка", "", "", AccessingElement.StateEnum.Loading);
             while (true)
             {
                 try
-                {
-                    Task.Delay(_delay).Wait();
+                {         
+                    var remains0 = Driver.FindElements(taskNotAcceptedButton);
+                    var claimed0 = Driver.FindElements(taskAcceptedButton);
+                    var completed0 = Driver.FindElements(taskCompletedButton);
+                    var available0 = Driver.FindElements(taskTakeNewButton);
+                    var remains = remains0.Count();
+                    var claimed = claimed0.Count();
+                    var completed = completed0.Count();
+                    var available = available0.Count();
+                    remains0 = null;
+                    claimed0 = null;
+                    completed0 = null;
+                    available0 = null;
+                    if (available > 0) {
+                        ClickJS(WaitEnabled(taskTakeNewButton));
+                        NotifyUI("", $"Новая задача", "", AccessingElement.StateEnum.Success);
+                        SetHint($"Получена {completed + 1}-я задача");
+                        Task.Delay(5 * 60 * 1000).Wait();       // extra delay; we just picked a new task
+                    }
+                    if (remains == 0 && completed == 15)
+                    {
+                        NotifyUI("", $"Выполнено", "", AccessingElement.StateEnum.Success);
+                        SetHint("Все задачи выполнены");
+                        return;
+                    }
+                    NotifyUI("", $"{completed + claimed} из 15", "", AccessingElement.StateEnum.Success);
+                    SetHint($"Выполнено: {completed}, осталось: {remains + claimed}, выполняется: {claimed}, доступно: {available}");
+                    if (completed == 14 && claimed == 1) {
+                            Task.Delay(5 * 60 * 1000).Wait();    // extra delay; we don't need to pick a new task anymore
+                    }
+                    Task.Delay(delayMilliseconds).Wait();
                     NotifyUI("Обновляю", "", "", AccessingElement.StateEnum.Loading);
-                    Driver.Navigate().Refresh();
-                    var remains = Driver.FindElements(taskNotAcceptedButton);
-                    var claimed = Driver.FindElements(taskAcceptedButton);
-                    NotifyUI("", $"{claimed.Count()}/{remains.Count()}", "", AccessingElement.StateEnum.Success);
+                    //Driver.Navigate().Refresh();
+                    RefreshJS();
+                   // Driver.Navigate().GoToUrl(eventURL);
                 }
                 catch (Exception ex)
                 {
@@ -75,18 +106,26 @@ namespace DailyCheck.PageObjects
                 );
         }
 
-        private static async Task<bool> CheckUrl(string url)
+        private void SetHint(string hint )
         {
-            HttpClient client = new() { Timeout = TimeSpan.FromSeconds(20) };
-            try
-            {
-                var checkingResponse = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                Log($"GetAsync is finished for {url} with {checkingResponse.IsSuccessStatusCode}");
-                if (checkingResponse.IsSuccessStatusCode)
-                    return true;
-            }
-            catch { Log($"GetAsync has failed on {url}"); }
-            return false;
+            UiContext?.Send(
+                new SendOrPostCallback((s) =>
+                {
+                    uiElement.ToolTip = "Событие 'Крымская операция': " + hint;
+                }),
+                null
+                );
+        }
+
+        private void RemoveHint()
+        {
+            UiContext?.Send(
+                new SendOrPostCallback((s) =>
+                {
+                    uiElement.ToolTip = null;
+                }),
+                null
+                );
         }
 
 

@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium.DevTools.V119.ServiceWorker;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DailyCheck.View

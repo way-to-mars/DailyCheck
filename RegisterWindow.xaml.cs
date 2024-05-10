@@ -6,6 +6,7 @@ using System.Windows.Media;
 using IWshRuntimeLibrary;
 using System.IO;
 using System.Diagnostics;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace DailyCheck
 {
@@ -197,7 +198,10 @@ namespace DailyCheck
             string login = LoginBox.Text;
             string password = PasswordBox1.Password;
             string playerName = PlayerNameHolder.Text;
+            string shortcutPath = "";
             if (playerName == "") playerName = "user";
+
+
 
             bool success = await Task.Run(() => {
                 string profileFile = UserProfileFile.Save(login, password, playerName);
@@ -211,11 +215,11 @@ namespace DailyCheck
                 try
                 {
                     WshShell WshShell = new WshShell();
+
                     string DesktopDir = (string)WshShell.SpecialFolders.Item("Desktop");
-                    string shortcutPath = Path.Combine(DesktopDir, $"{playerName}.lnk");
+                    shortcutPath = Path.Combine(DesktopDir, $"{playerName}.lnk");
 
                     IWshShortcut shortcut = (IWshShortcut)WshShell.CreateShortcut(shortcutPath);
-
                     shortcut.TargetPath = Process.GetCurrentProcess().MainModule?.FileName ?? Environment.CurrentDirectory + "\\" + ExecutableName;
                     shortcut.WindowStyle = 1;
                     shortcut.Arguments = profileFile;
@@ -224,7 +228,6 @@ namespace DailyCheck
                     shortcut.WorkingDirectory = Environment.CurrentDirectory;
                     shortcut.IconLocation = $"{shortcut.TargetPath}, 0";
                     shortcut.Save();
-
                     if (System.IO.File.Exists(shortcutPath)) return true;
                 }
                 catch { /* notify user in a code below */ }
@@ -234,11 +237,21 @@ namespace DailyCheck
             });
 
             if (success) {
-                it.Content = "Завершить";
+                it.Content = "Пуск";
                 it.Click -= Button_CreateLink;
-                it.Click += (s, e) => { Close(); };
+                it.Click += (s, e) => {
+                    ShellExecute(shortcutPath);
+                    Close();
+                };
             }
             it.IsEnabled = true;
+        }
+
+        private void ShellExecute(string fullPath) {
+            Process process = new();
+            process.StartInfo.FileName = fullPath;
+            process.StartInfo.UseShellExecute = true;
+            process.Start();
         }
     }
 }

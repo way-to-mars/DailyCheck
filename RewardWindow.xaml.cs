@@ -17,9 +17,15 @@ namespace DailyCheck
         {
             InitializeComponent();
             _driverProvider = new();
-            var TaskReward = GetReward(login, password);  // Login and password from somewhere outside (App?)
-            _ = UpdateEventProgress(TaskReward);
+            var TaskReward = GetReward(login, password); 
+            var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
             ValidateSettings();
+
+            Task.Run(() =>
+            {
+                TaskEvent.Wait();
+                _driverProvider.Dispose();
+            });
         }
 
         private async Task GetReward(string login, string password)
@@ -72,7 +78,7 @@ namespace DailyCheck
             await Task.Run(() =>
             {
                 var webEvent = new WebEventMay2024PageObject(_driverProvider.Driver, syncContext, WebEventAccessingElement);
-                webEvent.Start(delayInSeconds: 5).Wait();
+                webEvent.RunUpdater(delayInSeconds: 15).Wait();
             });
 
         }

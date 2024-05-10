@@ -10,7 +10,7 @@
         Width="300"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Height="360" Closing="Window_Closing">
+        Height="360" Closing="Window_Closing">    
 
     <Window.Background>
         <LinearGradientBrush>

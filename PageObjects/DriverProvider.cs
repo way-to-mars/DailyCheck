@@ -1,15 +1,31 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using System.Diagnostics;
 using System.IO;
 using static DailyCheck.DebugLogger;
+using static DailyCheck.PageObjects.DriverProvider;
 using Path = System.IO.Path;
 
 namespace DailyCheck.PageObjects
 {
     class DriverProvider : IDisposable
     {
-        private static readonly string ChromeBinaries = Path.Combine(AppContext.BaseDirectory, "ChromeBinaries");
+        // All the version you can find here:
+        // https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
+        public enum ChromiumVersions {
+            Default = 0,
+            V84 = 84,
+            V120 = 120,
+            V122 = 122,
+            V123 = 123,
+            V124 = 124,
+            V125 = 125,
+            V126 = 126,
+        }
+        private static readonly ChromiumVersions chromiumVersion = ChromiumVersions.V125;        
+
+        private static readonly string ChromeBinaries = Path.Combine(AppContext.BaseDirectory, $"ChromeBinaries{chromiumVersion.ToPath()}");
         private static readonly string ChromeBinary = Path.Combine(ChromeBinaries, "chrome-headless-shell\\chrome-headless-shell.exe");
         private static readonly string DriverPath = Path.Combine(ChromeBinaries, "chromedriver");
         private static readonly string BrowserDataPrefix = "browserdata";
@@ -20,11 +36,23 @@ namespace DailyCheck.PageObjects
 
         public DriverProvider()
         {
+           // Driver = ChromeProvider();
+            Driver = FirefoxProvider();
+        }
+
+        private IWebDriver ChromeProvider()
+        {
             ChromeOptions options = new();
             options.AddArguments($"user-data-dir={BrowserDataDir}"); // user-data-path
             options.AddArguments("headless=new");
-            // options.AddArgument("--no-sandbox");  // for some issues like "... WebDriver timed out after 60 seconds"
+            options.AddArgument("--no-sandbox");  // for some issues like "... WebDriver timed out after 60 seconds"
             options.AddArguments("incognito");
+            options.AddArguments("--disable-images");
+            options.AddArguments("--disable-gpu");
+            options.AddArguments("--disable-extensions");
+            options.AddArguments("--disable-dev-shm-usage");
+            options.AddArguments("--disable-software-rasterizer");
+            options.AddArguments("--disable-blink-features=AutomationControlled");
             options.BinaryLocation = ChromeBinary;
 
             ChromeDriverService driverService = ChromeDriverService.CreateDefaultService(DriverPath);
@@ -37,13 +65,31 @@ namespace DailyCheck.PageObjects
 
             try
             {
-                Driver = new ChromeDriver(driverService, options);
+                return new ChromeDriver(driverService, options);
             }
-            catch
-            {
-                Log("Default Driver");
-                Driver = new ChromeDriver();
+            catch(Exception e)
+            {                
+                Log(e.Message);
+                Log("Default Chrome Driver");
+                return new ChromeDriver();
             }
+        }
+
+        private IWebDriver FirefoxProvider()
+        {
+            string FirefoxBinaries = Path.Combine(AppContext.BaseDirectory, $"FirefoxBinaries");
+            string FirefoxBinary = Path.Combine(FirefoxBinaries, "firefox\\firefox.exe");
+            string GeckoDriverPath = Path.Combine(FirefoxBinaries, "geckodriver");
+
+            FirefoxOptions options = new();
+            options.AddArguments("--headless");
+            options.AddArguments("-safe-mode");
+            options.AddArguments("-private");
+            options.BinaryLocation=FirefoxBinary;
+
+            FirefoxDriverService driverService = FirefoxDriverService.CreateDefaultService(GeckoDriverPath);
+            driverService.HideCommandPromptWindow = true;
+            return new FirefoxDriver(driverService, options);
         }
 
         public void Dispose()
@@ -112,6 +158,15 @@ namespace DailyCheck.PageObjects
                     .Where(di => di.Name.StartsWith(BrowserDataPrefix))
                     .ForAll(di => _ = TryToDeleteFolder(di.FullName));
             });
+        }
+    }
+
+    internal static class Extenders
+    {
+        public static string ToPath(this ChromiumVersions chromiumVersion)
+        {
+            if (chromiumVersion == ChromiumVersions.Default) return "";
+            return $"\\{(int)chromiumVersion}.0";
         }
     }
 }
