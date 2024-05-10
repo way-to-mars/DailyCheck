@@ -12,9 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Bin64\**" />
     <Compile Remove="ChromeBinaries\**" />
+    <EmbeddedResource Remove="Bin64\**" />
     <EmbeddedResource Remove="ChromeBinaries\**" />
+    <None Remove="Bin64\**" />
     <None Remove="ChromeBinaries\**" />
+    <Page Remove="Bin64\**" />
     <Page Remove="ChromeBinaries\**" />
   </ItemGroup>
 
@@ -116,10 +120,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Bin64\" />
   </ItemGroup>
 
 </Project>
