@@ -12,12 +12,21 @@ namespace DailyCheck
     {
         private DriverProvider _driverProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private string login;
+        private string password;
 
         public RewardWindow(string login, string password)
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+            this.login = login;
+            this.password = password;
             _driverProvider = new();
-            var TaskReward = GetReward(login, password); 
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e) {
+            
+            var TaskReward = GetReward();
             var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
             ValidateSettings();
 
@@ -28,7 +37,7 @@ namespace DailyCheck
             });
         }
 
-        private async Task GetReward(string login, string password)
+        private async Task GetReward()
         {
             await Task.Delay(1);
 
@@ -65,7 +74,7 @@ namespace DailyCheck
                 refresh.Click += (s, e) =>
                     {
                         ConsoleAP.ElementsPanel.Children.Remove(refresh);
-                        _ = GetReward(login, password);
+                        _ = GetReward();
                     };
                 ConsoleAP.ElementsPanel.Children.Add(refresh);
             }

@@ -32,12 +32,20 @@ namespace DailyCheck.PageObjects
 
         private readonly string BrowserDataDir = Path.Combine(ChromeBinaries, $"{BrowserDataPrefix}{DateTime.Now.Ticks:X}");
 
-        public IWebDriver Driver { get; }
+        private Task<IWebDriver> _driverTask;
+        public IWebDriver Driver {
+            get
+            {
+                return _driverTask.Result;
+            }
+        }
 
         public DriverProvider()
         {
-           // Driver = ChromeProvider();
-            Driver = FirefoxProvider();
+            // Driver = ChromeProvider();
+            _driverTask = Task<IWebDriver>.Run(() => { 
+                return FirefoxProvider();
+            });
         }
 
         private IWebDriver ChromeProvider()
