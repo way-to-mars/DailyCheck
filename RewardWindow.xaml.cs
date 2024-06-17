@@ -10,7 +10,7 @@ namespace DailyCheck
 {
     public partial class RewardWindow : Window
     {
-        private DriverProvider _driverProvider;
+        private DriverProvider? _driverProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private string login;
         private string password;
@@ -21,41 +21,45 @@ namespace DailyCheck
             Loaded += OnLoaded;
             this.login = login;
             this.password = password;
-            _driverProvider = new();
+            _driverProvider = null;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e) {
             
             var TaskReward = GetReward();
-            var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
+            // var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
             ValidateSettings();
 
             Task.Run(() =>
             {
-                TaskEvent.Wait();
-                _driverProvider.Dispose();
+                TaskReward.Wait();
+                _driverProvider?.Dispose();
             });
         }
 
         private async Task GetReward()
         {
-            await Task.Delay(1);
-
             SynchronizationContext? syncContext = SynchronizationContext.Current;  // Possible NULL !!!
             ConsoleAP.Add("Инициализация Web-драйвера...",
                           "Инициализация Web-драйвера",
                           "Ошибка инициализации Web-драйвера",
                           AccessingElement.StateEnum.Loading);
 
-            IReadOnlyDictionary<string, string> Attributes = new Dictionary<string, string>();
-            bool isDone = false;
+            _driverProvider ??= new DriverProvider();
 
-            ConsoleAP.LastDone();
+            if (_driverProvider == null)
+            {
+                ConsoleAP.LastFailure();
+                return;
+            }
+            
+            IReadOnlyDictionary<string, string> Attributes = new Dictionary<string, string>();
+            bool isDone = false;           
 
             isDone = await Task.Run(() =>
             {
                 var lpo = new LoginPageObject(_driverProvider.Driver, syncContext, ConsoleAP);
-                bool isSignedIn = lpo.SignInAndGetReward(login, password).Result;
+                bool isSignedIn = lpo.SignInAndGetReward(login, password);
                 Attributes = lpo.Attributes;
                 return isSignedIn;
             });
@@ -80,17 +84,6 @@ namespace DailyCheck
             }
         }
 
-        private async Task UpdateEventProgress(Task taskBefore) {
-            await taskBefore;
-            SynchronizationContext? syncContext = SynchronizationContext.Current;  // Possible NULL !!!
-
-            await Task.Run(() =>
-            {
-                var webEvent = new WebEventMay2024PageObject(_driverProvider.Driver, syncContext, WebEventAccessingElement);
-                webEvent.RunUpdater(delayInSeconds: 15).Wait();
-            });
-
-        }
 
         private async Task ShowReward(IReadOnlyDictionary<string, string> Attributes)
         {

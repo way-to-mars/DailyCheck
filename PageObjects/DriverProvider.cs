@@ -97,7 +97,17 @@ namespace DailyCheck.PageObjects
 
             FirefoxDriverService driverService = FirefoxDriverService.CreateDefaultService(GeckoDriverPath);
             driverService.HideCommandPromptWindow = true;
-            return new FirefoxDriver(driverService, options);
+
+            try
+            {
+                return new FirefoxDriver(driverService, options);
+            }
+            catch (Exception e)
+            {
+                Log(e.Message);
+                Log("Default Gecko Driver");
+                return new FirefoxDriver();
+            }
         }
 
         public void Dispose()

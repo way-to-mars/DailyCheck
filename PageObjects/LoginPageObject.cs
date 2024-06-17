@@ -39,9 +39,9 @@ namespace DailyCheck.PageObjects
             {"Type", RewardType.None.ToString() }
         };
 
-        public async Task<bool> SignInAndGetReward(string login, string password)
+        public bool SignInAndGetReward(string login, string password)
         {
-            await Task.Run(() => { }); // Empty action
+            // await Task.Run(() => { }); // Empty action
 
             if (!EstablishConnection()) return false;
 
@@ -134,6 +134,7 @@ namespace DailyCheck.PageObjects
         {
             try
             {
+                ConsolePanelLastDone();
                 ConsolePanelAdd("Загружаем сайт авторизации...",
                                 "Загружаем сайт авторизации",
                                 $"Не удалось загрузить страницу авторизации",

@@ -35,13 +35,12 @@ namespace DailyCheck
                 else
                 {
                     MessageBox.Show($"Не удалось прочитать файл:\n{argFile}");
-                    //Shutdown(exitCode: 1);
                     MainWindow = new RegisterWindow();
                 }
             }
             else
             {
-                Log($"Here's no file in the first argument");
+                Log($"There's no file in the first argument");
                 MainWindow = new RegisterWindow();
             }
 

@@ -1,9 +1,5 @@
 ﻿using DailyCheck.View;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System.Net;
-using System.Net.Http;
-using System.Windows;
 using static DailyCheck.DebugLogger;
 
 namespace DailyCheck.PageObjects
