@@ -80,6 +80,14 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
+                <uc:AccessingElement
+                    x:Name="WebEventAccessingElement"
+                    Width="140"
+                    TextLoading="Июнь 2024"
+                    TextSuccess="success"
+                    TextFailure="failure"
+                    State="Loading"
+                    />
                 <uc:ButtonLGC Margin="2"/>
                 <Button Width="30" Height="30" Margin="2" Click="Settings_Click">
                     <Button.Content>

@@ -27,14 +27,16 @@ namespace DailyCheck
         private void OnLoaded(object sender, RoutedEventArgs e) {
             
             var TaskReward = GetReward();
-            // var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
+            var TaskEvent = UpdateEventProgress(taskBefore: TaskReward);
             ValidateSettings();
 
             Task.Run(() =>
             {
-                TaskReward.Wait();
+                TaskEvent.Wait();
                 _driverProvider?.Dispose();
             });
+
+            ValidateSettings();
         }
 
         private async Task GetReward()
@@ -84,6 +86,20 @@ namespace DailyCheck
             }
         }
 
+        private async Task UpdateEventProgress(Task taskBefore)
+        {
+            await taskBefore;
+            SynchronizationContext? syncContext = SynchronizationContext.Current;  // Possible NULL !!!
+
+            _driverProvider ??= new DriverProvider();
+
+            await Task.Run(() =>
+            {
+                var webEvent = new WebEventJune2024PageObject(_driverProvider.Driver, syncContext, WebEventAccessingElement);
+                webEvent.RunUpdater(delayInSeconds: 15).Wait();
+            });
+
+        }
 
         private async Task ShowReward(IReadOnlyDictionary<string, string> Attributes)
         {
